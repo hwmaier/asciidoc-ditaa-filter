@@ -2,7 +2,7 @@ ditaa filter for AsciiDoc
 =========================
 Author: Henrik Maier
 
-Version: 1.0
+Version: 1.1
 
 
 Introduction
@@ -82,8 +82,11 @@ Installation
 In addition to AsciiDoc you will need to have installed:
 
 - Java
-- The ditaa 0.9 jar package (link:http://ditaa.sourceforge.net[]).
-  Copy the ditaa0_9.jar file into the same directory as this filter.
+- The ditaa 0.9 jar package (link:http://ditaa.sourceforge.net[])
+  must be present in the filter directory. It is included in this
+  filter distribution for convenience.
+  The GPL licensed ditaa source code can be obtained from
+  http://sourceforge.net/projects/ditaa/[].
 
 
 The filter was developed and tested on Windows using ditaa 0.9
