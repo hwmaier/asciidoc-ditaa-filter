@@ -11,10 +11,6 @@ granted under the terms of the GNU General Public License (GPL).
 usage = "%prog [options] inputfile"
 __version__ = '1.0'
 
-# Suppress warning: "the md5 module is deprecated; use hashlib instead"
-import warnings
-warnings.simplefilter('ignore',DeprecationWarning)
-
 import os, sys, tempfile
 from optparse import *
 
