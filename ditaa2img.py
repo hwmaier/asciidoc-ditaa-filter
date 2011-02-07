@@ -9,7 +9,7 @@ granted under the terms of the GNU General Public License (GPL).
 """
 
 usage = "%prog [options] inputfile"
-__version__ = '1.0'
+__version__ = '1.1'
 
 import os, sys, tempfile
 from optparse import *
@@ -18,12 +18,16 @@ from optparse import *
 #
 # Configuration constants
 #
-DITAA_JAR = "ditaa0_9.jar"
+DITAA_JAR  = "ditaa0_9.jar"
+DITAA_DIR  = os.path.dirname(os.path.realpath(sys.argv[0]))
+DITAA_PATH = os.path.join(DITAA_DIR, DITAA_JAR)
+
 
 #
 # Global data
 #
 verbose = False
+
 
 #
 # Helper functions and classes
@@ -74,6 +78,7 @@ class Application():
                           " it is possible to change that using this option")
         self.options, args = parser.parse_args()
         verbose = self.options.verbose
+        print_verbose("Runing filter script %s" % os.path.realpath(sys.argv[0]))
         if len(args) != 1:
             parser.error("Invalid number of arguments")
         self.infile = args[0]
@@ -116,7 +121,8 @@ class Application():
                 options += " --scale %f" % self.options.scale
             if self.options.tabs:
                 options += " --tabs %d" % self.options.tabs
-            systemcmd('java -jar %s "%s" "%s" %s' % (DITAA_JAR, infile, outfile, options))
+            systemcmd('java -jar "%s" "%s" "%s" %s' % (
+                      DITAA_PATH, infile, outfile, options))
         finally:
             if temp:
                 os.remove(temp.name)
