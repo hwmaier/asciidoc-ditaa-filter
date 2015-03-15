@@ -1,0 +1,603 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<title>ditaa filter for AsciiDoc</title>
+<style type="text/css">
+/* Sans-serif font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+div#toctitle,
+span#author, span#revnumber, span#revdate, span#revremark,
+div#footer {
+  font-family: tahoma, verdana, sans-serif;
+}
+
+/* Serif font. */
+div.sectionbody {
+  font-family: tahoma, verdana, sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+tt {
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revnumber, span#revdate, span#revremark {
+}
+
+div#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #dddddd;
+  color: #777777;
+}
+/*HM+*/
+div.verseblock {
+  border-left: none;
+}
+/*HM-*/
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toc {
+  margin-bottom: 2.5em;
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+</style>
+</head>
+<body class="article">
+<div id="header">
+<h1>ditaa filter for AsciiDoc
+</h1>
+<span id="author">Author: Henrik Maier</span><br />
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Version: 1.1</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>ditaa (<a href="http://ditaa.sourceforge.net">http://ditaa.sourceforge.net</a>) is a small command-line utility
+written in Java, that can convert diagrams drawn using ascii art (drawings
+that contain characters that resemble lines like | / - ), into proper bitmap
+graphics.</p></div>
+<div class="paragraph"><p>Using the AsciiDoc ditaa filter, ASCII line art can be embedded into AsciiDoc
+documents and processed as PNG bitmap graphics.
+Ditaa as of version 0.9 is limited to the PNG format as output.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usage">Usage</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+The ditaa filter is invoked by setting the listing block or
+  paragraph style (the first positional block attribute) to <em>"ditaa"</em>.
+</p>
+</li>
+<li>
+<p>
+The second positional attribute (named <em>target</em>) is optional, it sets
+  the name of the generated image file. If this is not supplied a
+  file name is automatically generated.
+</p>
+</li>
+<li>
+<p>
+Additional well known ditaa options can be specified as named attributes. Refer to table below.
+</p>
+</li>
+</ul></div>
+<div class="tableblock">
+<table rules="rows"
+width="100%"
+frame="hsides"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 1. Supported ditaa options</caption>
+<col width="20%" />
+<col width="35%" />
+<col width="45%" />
+<thead>
+<tr>
+<th align="left" valign="top"> Option        </th>
+<th align="left" valign="top"> Example                           </th>
+<th align="left" valign="top"> Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><em>scaling</em></p></td>
+<td align="left" valign="top"><p class="table"><tt>["ditaa",scaling="2.0"]</tt></p></td>
+<td align="left" valign="top"><p class="table">ditaa image scaling
+    <span class="footnote"><br />[<tt>scaling</tt> is different to the DocBook backend&#8217;s image <tt>scale</tt> attribute!]<br /></span></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>tabs</em></p></td>
+<td align="left" valign="top"><p class="table"><tt>["ditaa",tabs="4"]</tt></p></td>
+<td align="left" valign="top"><p class="table">tabs are normally interpreted as 8 spaces but
+                                        it is possible to change that using this option</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>round-corners</em></p></td>
+<td align="left" valign="top"><p class="table"><tt>["ditaa",options="round-corners"]</tt></p></td>
+<td align="left" valign="top"><p class="table">causes all corners to be rendered as round corners</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>no-separation</em></p></td>
+<td align="left" valign="top"><p class="table"><tt>["ditaa",options="no-separation"]</tt></p></td>
+<td align="left" valign="top"><p class="table">prevents the separation of common edges of shapes</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>no-shadows</em></p></td>
+<td align="left" valign="top"><p class="table"><tt>["ditaa",options="no-shadows"]</tt></p></td>
+<td align="left" valign="top"><p class="table">turns off the drop-shadow effect</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>no-antialias</em></p></td>
+<td align="left" valign="top"><p class="table"><tt>["ditaa",options="no-antialias"]</tt></p></td>
+<td align="left" valign="top"><p class="table">turns anti-aliasing off</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>This AsciiDoc block:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>["ditaa"]
+---------------------------------------------------------------------
+    +--------+   +-------+    +-------+
+    |        | --+ ditaa +--&gt; |       |
+    |  Text  |   +-------+    |diagram|
+    |Document|   |!magic!|    |       |
+    |     {d}|   |       |    |       |
+    +---+----+   +-------+    +-------+
+        :                         ^
+        |       Lots of work      |
+        +-------------------------+
+---------------------------------------------------------------------</tt></pre>
+</div></div>
+<div class="paragraph"><p>renders:</p></div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__1.png" alt="asciidoc-ditaa-readme__1.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation">Installation</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In addition to AsciiDoc you will need to have installed:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Java
+</p>
+</li>
+<li>
+<p>
+The ditaa 0.9 jar package (<a href="http://ditaa.sourceforge.net">http://ditaa.sourceforge.net</a>)
+  must be present in the filter directory. It is included in this
+  filter distribution for convenience.
+  The GPL licensed ditaa source code can be obtained from
+  <a href="http://sourceforge.net/projects/ditaa/">http://sourceforge.net/projects/ditaa/</a>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The filter was developed and tested on Windows using ditaa 0.9
+and AsciiDoc 8.6.3.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples">Examples</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The following examples are taken from the ditaa documentation.</p></div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__2.png" alt="asciidoc-ditaa-readme__2.png" />
+</div>
+<div class="title">Figure 1. Blocks</div>
+</div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__3.png" alt="asciidoc-ditaa-readme__3.png" />
+</div>
+<div class="title">Figure 2. Round corners</div>
+</div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__4.png" alt="asciidoc-ditaa-readme__4.png" />
+</div>
+<div class="title">Figure 3. Color</div>
+</div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__5.png" alt="asciidoc-ditaa-readme__5.png" />
+</div>
+<div class="title">Figure 4. Color codes</div>
+</div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__6.png" alt="asciidoc-ditaa-readme__6.png" />
+</div>
+<div class="title">Figure 5. Dashed lines</div>
+</div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__7.png" alt="asciidoc-ditaa-readme__7.png" />
+</div>
+<div class="title">Figure 6. Point markers</div>
+</div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__8.png" alt="asciidoc-ditaa-readme__8.png" />
+</div>
+<div class="title">Figure 7. Text handling</div>
+</div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__9.png" alt="asciidoc-ditaa-readme__9.png" />
+</div>
+<div class="title">Figure 8. Flowchart</div>
+</div>
+<div class="imageblock ditaa">
+<div class="content">
+<img src="images/asciidoc-ditaa-readme__10.png" alt="asciidoc-ditaa-readme__10.png" />
+</div>
+<div class="title">Figure 9. Shapes</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+</body>
+</html>
