@@ -13,6 +13,7 @@ __version__ = '1.1'
 
 import os, sys, tempfile
 from optparse import *
+import md5
 
 
 #
@@ -88,6 +89,12 @@ class Application():
             self.options.outfile = "%s.png" % os.path.splitext(self.infile)[0]
             print_verbose("Output file is %s" % self.options.outfile)
 
+    def hash(self, infile, options):
+        h = md5.new()
+        h.update(open(infile).read())
+        h.update(options)
+        digest = h.hexdigest()
+        return digest
 
     def run(self):
         """Core logic of the application"""
@@ -121,8 +128,19 @@ class Application():
                 options += " --scale %f" % self.options.scale
             if self.options.tabs:
                 options += " --tabs %d" % self.options.tabs
-            systemcmd('java -jar "%s" "%s" "%s" %s' % (
-                      DITAA_PATH, infile, outfile, options))
+            digest1 = self.hash(infile, options.replace(" -v", ""))
+            hashfile = outfile + ".hash"
+            if os.path.isfile(hashfile) and os.path.isfile(outfile):
+                digest2 = open(hashfile).read()
+            else:
+                digest2 = ""
+            if digest1 == digest2:
+                print_verbose("hit: %s %s" % (outfile, hashfile))
+            else:
+                print_verbose("miss: %s %s" % (outfile, hashfile))
+                systemcmd('java -jar "%s" "%s" "%s" %s' % (
+                          DITAA_PATH, infile, outfile, options))
+                open(hashfile, 'w').write(digest1)
         finally:
             if temp:
                 os.remove(temp.name)
